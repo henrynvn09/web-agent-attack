@@ -139,7 +139,7 @@
       },
     });
     if ((await res.status) === 201) {
-      window.location.href = "/";
+      window.location.href = "/profile";
     } else {
       let json = await res.json();
       console.log(json);
