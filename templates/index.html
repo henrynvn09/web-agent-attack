@@ -1,8 +1,7 @@
-{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block content
-%}
-<h1>Home</h1>
+{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block content %}
+<h1 class="home-header">Home</h1>
 <img src="/static/logo.png" alt="ECE 117 course logo." id="home-logo" />
-<p>
+<p class="home-description">
   Welcome to Bruin Market, your ultimate destination for a seamless and
   personalized online shopping experience. At Bruin Market, we redefine the way
   you shop by offering a curated selection of high-quality products that cater
@@ -13,4 +12,36 @@
   interface that makes Bruin Market your go-to destination for all your online
   shopping desires. Shop with confidence, shop with Bruin Market.
 </p>
+
+<style>
+  .home-header {
+    text-align: center;
+    font-size: 2.5em;
+    color: #007bff;
+    margin-bottom: 0.5em;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  #home-logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .home-description {
+    text-align: center;
+    font-size: 1.2em;
+    color: #333;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1em;
+    background: #f9f9f9;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+</style>
 {% endblock %}
