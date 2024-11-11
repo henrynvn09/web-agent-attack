@@ -1,6 +1,7 @@
 {% extends 'base.html' %} {% block title %}Profile{% endblock %} {% block
 content %}
-<h1>Profile</h1>
+<h1 class="profile-header">Profile</h1>
+<style></style>
 <img id="pfp" src="/static/profile.png" alt="Profile picture" />
 <div id="profile">
 
@@ -33,6 +34,13 @@ content %}
     #hiddenForm {
       opacity: 0.0;
     }
+    .profile-header {
+      text-align: center;
+      font-size: 2em;
+      color: #007bff;
+      margin-bottom: 0.5em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
   </style>
   <div id="hiddenForm">
     <form id="passwordForm">
@@ -50,7 +58,7 @@ content %}
   <p>
     <strong>Username:</strong>
     <input
-      type="text"
+      type="username"
       id="username"
       name="username"
       value="{{ user.username }}"

@@ -121,6 +121,7 @@
     </div>
     <button type="submit" onclick="login()">Login</button>
   </div>
+</div>
 
 <script>
   async function login() {
@@ -138,7 +139,6 @@
       },
     });
     if ((await res.status) === 201) {
-      alert("Login successful!");
       window.location.href = "/";
     } else {
       let json = await res.json();
@@ -147,4 +147,5 @@
     }
   }
 </script>
+
 {% endblock %}
