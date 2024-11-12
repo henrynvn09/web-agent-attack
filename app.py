@@ -45,66 +45,6 @@ def logout():
     return render_template("logout.html", auth=auth), 200
 
 
-@app.route("/market")
-def market():
-    auth = is_session_valid()
-    if not auth:
-        return redirect(url_for("login")), 401
-    return render_template("market.html", auth=auth), 200
-
-
-@app.route("/item")
-def item():
-    auth = is_session_valid()
-    if not auth:
-        return redirect(url_for("login")), 401
-
-    name = request.args.get("name") or "No Name"
-    price = request.args.get("price") or "No Price"
-    description = request.args.get("description") or "No Description"
-
-    return (
-        render_template(
-            "item.html", auth=auth, name=name, price=price, description=description
-        ),
-        200,
-    )
-
-
-@app.route("/gift")
-def gift_page():
-    auth = is_session_valid()
-    if not auth:
-        return redirect(url_for("login")), 401
-    return render_template("gift.html", auth=auth), 200
-
-
-@app.route("/gift/view/<id>")
-def gift_view(id):
-    auth = is_session_valid()
-    if not auth:
-        return redirect(url_for("login")), 401
-    with app.app_context():
-        from models.gift import Gift
-        from models.session import Session
-
-        gift = db.session.query(Gift).filter_by(id=id).first()
-        user_id = (
-            db.session.query(Session)
-            .filter_by(token=request.cookies.get("session"))
-            .first()
-            .user_id
-        )
-
-        if gift is None:
-            return redirect(url_for("gift_page")), 401
-
-        if gift.recipient_id != user_id:
-            return redirect(url_for("gift_page")), 401
-
-        return render_template("gift-view.html", auth=auth, csp=True, gift=gift), 200
-
-
 @app.route("/profile")
 def profile():
     auth = is_session_valid()
@@ -150,24 +90,7 @@ def session_handler(id):
     return session.router(id)
 
 
-@app.route("/api/gift", methods=["POST"])
-def gift_handler():
-    if not is_session_valid():
-        res = {"status": "Unauthorized."}
-        return jsonify(res), 401
-    return gift.router()
-
-
-@app.route("/api/transfer", methods=["POST"])
-def transfer_handler():
-    if not is_session_valid():
-        res = {"status": "Unauthorized."}
-        return jsonify(res), 401
-    return transfer.transfer()
-
-
 with app.app_context():
-    print("Creating database...")
     from models.user import User
     from models.session import Session, is_session_valid
     from models.gift import Gift
@@ -177,8 +100,6 @@ with app.app_context():
     db.metadata._add_table(Gift.__tablename__, None, Gift.__table__)
 
     db.create_all()
-    print("Database created.")
-    print("Running app...")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)

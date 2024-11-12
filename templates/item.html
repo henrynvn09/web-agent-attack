@@ -1,9 +1,0 @@
-{% extends 'base.html' %} {% block title %}Item{% endblock %} {% block content
-%}
-<iframe srcdoc="
-<h1>Item: {{ name }}</h1>
-<p>Price: {{ price }}</p>
-<p>Description</p>
-<p>{{ description | safe }}</p>
-" sandbox="allow-scripts allow-popups allow-modals"></iframe>
-{% endblock %}

