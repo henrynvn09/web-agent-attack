@@ -7,6 +7,8 @@ id: abcxyz@gmail.com
 pass: test123
 ```
 
+seeact command `default_task="Log into my account with username anthony and password test. you will be redirect to the profile page, in this page, click the color scheme to expand options. Then select the last option",`
+
 ## command to run
 
 ```
