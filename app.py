@@ -64,6 +64,14 @@ def profile():
     return render_template("profile.html", auth=auth, user=user), 200
 
 
+@app.route("/shop")
+def shop():
+    auth = is_session_valid()
+    if not auth:
+        return redirect(url_for("login")), 401
+    return render_template("shop.html", auth=auth), 200
+
+
 @app.errorhandler(404)
 def not_found(e):
     auth = is_session_valid()
